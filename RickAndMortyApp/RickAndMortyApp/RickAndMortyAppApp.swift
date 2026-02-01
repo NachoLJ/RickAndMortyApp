@@ -9,9 +9,13 @@ import SwiftUI
 
 @main
 struct RickAndMortyAppApp: App {
+    
+    @StateObject private var appState = AppState()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            AppRootView()
+                .environmentObject(appState)
         }
     }
 }
