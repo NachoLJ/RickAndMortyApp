@@ -56,6 +56,9 @@ struct HomeView: View {
                                 //TODO: Implementar navegacion
                             })
                             .frame(width: cellWidth, height: cellHeight)
+                            .onAppear {
+                                viewModel.loadNextPageIfNeeded(currentItemID: item.id)
+                            }
                         }
                     }
                     .padding(.horizontal, horizontalPadding)
