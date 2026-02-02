@@ -11,11 +11,13 @@ import SwiftUI
 struct RickAndMortyAppApp: App {
     
     @StateObject private var appState = AppState()
+    @StateObject private var container = AppContainer()
     
     var body: some Scene {
         WindowGroup {
             AppRootView()
                 .environmentObject(appState)
+                .environmentObject(container)
         }
     }
 }

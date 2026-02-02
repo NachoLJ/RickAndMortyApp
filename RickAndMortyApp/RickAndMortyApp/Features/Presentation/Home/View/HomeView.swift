@@ -11,12 +11,6 @@ struct HomeView: View {
     
     @StateObject private var viewModel: HomeViewModel
     
-    // Default initializer (creates its own VM)
-    @MainActor
-    init() {
-        _viewModel = StateObject(wrappedValue: HomeViewModel())
-    }
-    
     // DI initializer (for tests, previews, container)
     init(viewModel: HomeViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -26,16 +20,6 @@ struct HomeView: View {
         content
             .navigationTitle(viewModel.state.title)
             .toolbar { toolbarContent() }
-            .sheet(
-                isPresented: Binding(
-                    get: { viewModel.state.isFilterSheetPresented },
-                    set: { isPresented in
-                        if !isPresented { viewModel.didDismissFilterSheet() }
-                    }
-                )
-            ) {
-                FilterSortView()
-            }
             .task {
                 viewModel.onAppear()
             }
@@ -111,6 +95,32 @@ struct HomeView: View {
 
 #Preview {
     NavigationStack {
-        HomeView()
+        HomeView(viewModel: HomeViewModel(fetchCharactersUseCase: PreviewFetchCharactersUseCase()))
+    }
+}
+
+private struct PreviewFetchCharactersUseCase: FetchCharactersUseCaseProtocol {
+    func execute(query: CharactersQuery) async throws -> CharactersPageEntity {
+        CharactersPageEntity(
+            items: [
+                CharacterEntity(
+                    id: 1,
+                    name: "Rick Sanchez",
+                    status: .alive,
+                    species: "Human",
+                    gender: .male,
+                    imageURL: URL(string: "https://rickandmortyapi.com/api/character/avatar/1.jpeg")!
+                ),
+                CharacterEntity(
+                    id: 2,
+                    name: "Morty Smith",
+                    status: .alive,
+                    species: "Human",
+                    gender: .male,
+                    imageURL: URL(string: "https://rickandmortyapi.com/api/character/avatar/2.jpeg")!
+                )
+            ],
+            nextPage: 2
+        )
     }
 }

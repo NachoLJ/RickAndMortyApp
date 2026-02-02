@@ -8,9 +8,12 @@
 import SwiftUI
 
 struct MainFlowView: View {
+    
+    @EnvironmentObject private var container: AppContainer
+    
     var body: some View {
         NavigationStack {
-            HomeView()
+            HomeView(viewModel: container.makeHomeViewModel())
         }
     }
 }

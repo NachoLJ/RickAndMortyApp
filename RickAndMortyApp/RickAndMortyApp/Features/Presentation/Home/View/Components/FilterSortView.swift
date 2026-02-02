@@ -1,5 +1,5 @@
 //
-//  FilterSortSheetView.swift
+//  FilterSortView.swift
 //  RickAndMortyApp
 //
 //  Created by Ignacio Lopez Jimenez on 1/2/26.

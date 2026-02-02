@@ -11,44 +11,54 @@ import Combine
 @MainActor
 final class HomeViewModel: ObservableObject {
     
+    // MARK: - Dependencies
+    private let fetchCharactersUseCase: FetchCharactersUseCaseProtocol
+    
+    // MARK: - State
     @Published private(set) var state = HomeViewState()
     
+    // MARK: - Init
+    init(fetchCharactersUseCase: FetchCharactersUseCaseProtocol) {
+        self.fetchCharactersUseCase = fetchCharactersUseCase
+    }
+    
+    // MARK: - Lifecycle
     func onAppear() {
         // Avoid reload if content is already loaded
         if case .loaded = state.content { return }
-        loadCharacters()
+        Task {
+            await loadInitialCharacters()
+        }
     }
     
-    func didTapFilterButton() {
-        state.isFilterSheetPresented = true
-    }
-    
-    func didDismissFilterSheet() {
-        state.isFilterSheetPresented = false
-    }
-    
+    // MARK: - UI Actions
     func retry() {
-        loadCharacters()
+        Task {
+            await loadInitialCharacters()
+        }
     }
     
     // MARK: - Private
-    
-    private func loadCharacters() {
+    private func loadInitialCharacters() async {
         state.content = .loading
         
-        Task {
-            try? await Task.sleep(nanoseconds: 700_000_000)
+        do {
+            let query = CharactersQuery(page: 1)
+            let page = try await fetchCharactersUseCase.execute(query: query)
             
-            let mock: [CharacterRowModel] = [
-                .init(id: 1, name: "Rick Sanchez", statusText: "Alive", speciesText: "Human",
-                      imageURL: URL(string: "https://rickandmortyapi.com/api/character/avatar/1.jpeg")),
-                .init(id: 2, name: "Morty Smith", statusText: "Alive", speciesText: "Human",
-                      imageURL: URL(string: "https://rickandmortyapi.com/api/character/avatar/2.jpeg")),
-                .init(id: 3, name: "Summer Smith", statusText: "Alive", speciesText: "Human",
-                      imageURL: URL(string: "https://rickandmortyapi.com/api/character/avatar/3.jpeg"))
-            ]
+            let rows = page.items.map { entity in
+                CharacterRowModel(
+                    id: entity.id,
+                    name: entity.name,
+                    statusText: entity.status.rawValue.capitalized,
+                    speciesText: entity.species,
+                    imageURL: entity.imageURL
+                )
+            }
             
-            state.content = .loaded(mock)
+            state.content = .loaded(rows)
+        } catch {
+            state.content = .error(message: "Failed to load characters. Please try again")
         }
     }
 }
