@@ -11,6 +11,11 @@ struct HomeView: View {
     
     @StateObject private var viewModel: HomeViewModel
     
+    private let columns = [
+        GridItem(.flexible()),
+        GridItem(.flexible())
+    ]
+    
     // DI initializer (for tests, previews, container)
     init(viewModel: HomeViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -33,24 +38,13 @@ struct HomeView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             
         case .loaded(let items):
+            
             GeometryReader { geometry in
-                let spacing: CGFloat = 14
-                let horizontalPadding: CGFloat = 16
-                
-                let availableWidth = geometry.size.width - (
-                    horizontalPadding * 2
-                ) - spacing
-                let cellWidth = availableWidth / 2
-                let cellHeight = cellWidth * 1.35
-                
+                let cellWidth = geometry.size.width * 0.30
+                let cellHeight = cellWidth * 1.5
+
                 ScrollView {
-                    LazyVGrid(
-                        columns: [
-                            GridItem(.fixed(cellWidth), spacing: spacing),
-                            GridItem(.fixed(cellWidth), spacing: spacing)
-                        ],
-                        spacing: spacing
-                    ) {
+                    LazyVGrid(columns: columns, spacing: 16) {
                         ForEach(items) { item in
                             CharacterGridCellView(item: item, onTap: {
                                 //TODO: Implementar navegacion
@@ -61,9 +55,7 @@ struct HomeView: View {
                             }
                         }
                     }
-                    .padding(.horizontal, horizontalPadding)
-                    .padding(.top, 12)
-                    .padding(.bottom, 20)
+                    .padding(.all, 8)
                 }
             }
             

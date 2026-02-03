@@ -24,6 +24,10 @@ final class AppContainer: ObservableObject {
         DefaultCharactersRepository(networkClient: networkClient)
     }()
     
+    private lazy var imageRepository: ImageRepositoryProtocol = {
+        DefaultImageRepository(networkClient: networkClient)
+    }()
+    
     // MARK: - Domain
     
     private lazy var fetchCharactersUseCase: FetchCharactersUseCaseProtocol = {
@@ -35,4 +39,9 @@ final class AppContainer: ObservableObject {
     func makeHomeViewModel() -> HomeViewModel {
         HomeViewModel(fetchCharactersUseCase: fetchCharactersUseCase)
     }
+
+    func makeImageLoader(url: URL?) -> ImageLoader {
+        ImageLoader(url: url, repository: imageRepository)
+    }
 }
+

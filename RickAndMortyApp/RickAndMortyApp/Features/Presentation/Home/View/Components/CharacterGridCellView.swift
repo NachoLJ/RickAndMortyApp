@@ -8,41 +8,43 @@
 import SwiftUI
 
 struct CharacterGridCellView: View {
-    
+
     let item: CharacterRowModel
     let onTap: () -> Void
-    
+    @EnvironmentObject private var container: AppContainer
     
     var body: some View {
         ZStack(alignment: .bottom) {
-            // Imagen
-            RemoteImageView(url: item.imageURL)
-            
-            // Overlay nombre
-            VStack(alignment: .leading, spacing: 4) {
-                Text(item.name)
-                    .font(.headline)
-                    .lineLimit(2)
-                    .minimumScaleFactor(0.85)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(10)
-            .background(
-                LinearGradient(
-                    colors: [
-                        Color.black.opacity(0.55),
-                        Color.black.opacity(0.0)
-                    ],
-                    startPoint: .bottom,
-                    endPoint: .top
-                )
-            )
-            .foregroundStyle(.white)
+
+            RemoteImageView(loader: container.makeImageLoader(url: item.imageURL), contentMode: .fill)
+            overlay
         }
         .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
         .contentShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-        .onTapGesture { onTap() }
         .shadow(radius: 4, y: 2)
+        .onTapGesture { onTap() }
+    }
+
+    private var overlay: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(item.name)
+                .font(.headline)
+                .lineLimit(2)
+                .minimumScaleFactor(0.85)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(10)
+        .background(
+            LinearGradient(
+                colors: [
+                    Color.black.opacity(0.55),
+                    Color.black.opacity(0.0)
+                ],
+                startPoint: .bottom,
+                endPoint: .top
+            )
+        )
+        .foregroundStyle(.white)
     }
 }
 
@@ -60,3 +62,4 @@ struct CharacterGridCellView: View {
     .frame(width: 170, height: 240)
     .padding()
 }
+
