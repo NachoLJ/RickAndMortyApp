@@ -15,14 +15,8 @@ struct CharacterGridCellView: View {
     
     var body: some View {
         ZStack(alignment: .bottom) {
-            // Placeholder de imagen
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill (Color.secondary.opacity(0.15))
-                .overlay(
-                    Text("IMG")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                )
+            // Imagen
+            RemoteImageView(url: item.imageURL)
             
             // Overlay nombre
             VStack(alignment: .leading, spacing: 4) {
