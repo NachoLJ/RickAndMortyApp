@@ -10,6 +10,7 @@ import SwiftUI
 struct HomeView: View {
     
     @StateObject private var viewModel: HomeViewModel
+    @EnvironmentObject private var container: AppContainer
     
     private let columns = [
         GridItem(.flexible()),
@@ -25,6 +26,13 @@ struct HomeView: View {
         content
             .navigationTitle(viewModel.state.title)
             .toolbar { toolbarContent() }
+            .alert(item: $viewModel.alertError) { alertError in
+                Alert(
+                    title: Text(alertError.title),
+                    message: Text(alertError.message),
+                    dismissButton: .default(Text("OK"))
+                )
+            }
             .task {
                 viewModel.onAppear()
             }
@@ -38,25 +46,25 @@ struct HomeView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             
         case .loaded(let items):
-            
-            GeometryReader { geometry in
-                let cellWidth = geometry.size.width * 0.30
-                let cellHeight = cellWidth * 1.5
-
-                ScrollView {
-                    LazyVGrid(columns: columns, spacing: 16) {
-                        ForEach(items) { item in
-                            CharacterGridCellView(item: item, onTap: {
+            ScrollView {
+                LazyVGrid(columns: columns, spacing: 16) {
+                    ForEach(items) { item in
+                        CharacterGridCellView(
+                            item: item,
+                            imageLoader: container.makeImageLoader(url: item.imageURL),
+                            onTap: {
                                 //TODO: Implementar navegacion
-                            })
-                            .frame(width: cellWidth, height: cellHeight)
-                            .onAppear {
-                                viewModel.loadNextPageIfNeeded(currentItemID: item.id)
                             }
+                        )
+                        .aspectRatio(0.75, contentMode: .fill)
+                        .clipped()
+                        .onAppear {
+                            viewModel.loadNextPageIfNeeded(currentItemID: item.id)
                         }
                     }
-                    .padding(.all, 8)
                 }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
             }
             
         case .error(let message):

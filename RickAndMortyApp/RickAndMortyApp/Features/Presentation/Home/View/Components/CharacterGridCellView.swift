@@ -10,13 +10,12 @@ import SwiftUI
 struct CharacterGridCellView: View {
 
     let item: CharacterRowModel
+    let imageLoader: ImageLoader
     let onTap: () -> Void
-    @EnvironmentObject private var container: AppContainer
     
     var body: some View {
         ZStack(alignment: .bottom) {
-
-            RemoteImageView(loader: container.makeImageLoader(url: item.imageURL), contentMode: .fill)
+            RemoteImageView(loader: imageLoader, contentMode: .fill)
             overlay
         }
         .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
@@ -49,7 +48,13 @@ struct CharacterGridCellView: View {
 }
 
 #Preview {
-    CharacterGridCellView(
+    let mockRepository = PreviewImageRepository()
+    let mockLoader = ImageLoader(
+        url: URL(string: "https://rickandmortyapi.com/api/character/avatar/1.jpeg"),
+        repository: mockRepository
+    )
+    
+    return CharacterGridCellView(
         item: .init(
             id: 1,
             name: "Rick Sanchez",
@@ -57,9 +62,17 @@ struct CharacterGridCellView: View {
             speciesText: "Human",
             imageURL: URL(string: "https://rickandmortyapi.com/api/character/avatar/1.jpeg")
         ),
+        imageLoader: mockLoader,
         onTap: {}
     )
-    .frame(width: 170, height: 240)
+    .frame(width: 170, height: 255)
     .padding()
+}
+
+private struct PreviewImageRepository: ImageRepositoryProtocol {
+    func fetchImageData(from url: URL) async throws -> Data {
+        // Return empty data for preview
+        Data()
+    }
 }
 

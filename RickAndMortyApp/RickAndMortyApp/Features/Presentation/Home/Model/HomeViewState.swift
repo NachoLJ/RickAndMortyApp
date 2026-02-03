@@ -19,3 +19,9 @@ struct HomeViewState: Equatable {
     var content: Content = .loading
     var isFilterSheetPresented: Bool = false
 }
+
+struct AlertError: Identifiable, Equatable {
+    let id = UUID()
+    let title: String
+    let message: String
+}
