@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 protocol NetworkClientProtocol: Sendable {
     func request<T: Decodable>(endpoint: Endpoint) async throws -> T
     func fetchImage(from url: URL) async throws -> Data
@@ -17,13 +16,41 @@ final class DefaultNetworkClient: NetworkClientProtocol {
 
     private let session: URLSession
     private let decoder: JSONDecoder
+    private let logger: NetworkLoggerProtocol
 
-    init(session: URLSession = .shared, decoder: JSONDecoder = JSONDecoder()) {
+    init(
+        session: URLSession = .shared,
+        decoder: JSONDecoder = JSONDecoder(),
+        logger: NetworkLoggerProtocol = NetworkLogger()
+    ) {
         self.session = session
         self.decoder = decoder
+        self.logger = logger
     }
 
     func request<T: Decodable>(endpoint: Endpoint) async throws -> T {
+        let urlRequest = try makeURLRequest(from: endpoint)
+        let (data, _) = try await perform(urlRequest)
+
+        do {
+            return try decoder.decode(T.self, from: data)
+        } catch {
+            throw NetworkError.decodingError(error)
+        }
+    }
+
+    func fetchImage(from url: URL) async throws -> Data {
+        let request = URLRequest(url: url)
+        let (data, _) = try await perform(request)
+        return data
+    }
+}
+
+// MARK: - Private helpers
+
+private extension DefaultNetworkClient {
+
+    func makeURLRequest(from endpoint: Endpoint) throws -> URLRequest {
         guard let url = endpoint.url else {
             throw NetworkError.invalidUrl
         }
@@ -40,43 +67,26 @@ final class DefaultNetworkClient: NetworkClientProtocol {
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         }
 
-        do {
-            let (data, response) = try await session.data(for: request)
-
-            guard let httpResponse = response as? HTTPURLResponse else {
-                throw NetworkError.unknown
-            }
-
-            guard (200...299).contains(httpResponse.statusCode) else {
-                throw NetworkError.httpError(statusCode: httpResponse.statusCode)
-            }
-
-            guard !data.isEmpty else {
-                throw NetworkError.noData
-            }
-
-            do {
-                return try decoder.decode(T.self, from: data)
-            } catch {
-                throw NetworkError.decodingError(error)
-            }
-
-        } catch let error as NetworkError {
-            throw error
-        } catch {
-            throw NetworkError.networkError(error)
-        }
+        return request
     }
 
-    func fetchImage(from url: URL) async throws -> Data {
-        let request = URLRequest(url: url)
+    /// Executes a request and returns validated (data, response).
+    /// - Logs request/response/errors and centralizes all common validation.
+    func perform(_ request: URLRequest) async throws -> (Data, HTTPURLResponse) {
+        let url = request.url ?? URL(string: "about:blank")!
 
+        logger.logRequest(request)
+
+        let start = Date()
         do {
             let (data, response) = try await session.data(for: request)
+            let durationMs = Int(Date().timeIntervalSince(start) * 1000)
 
             guard let httpResponse = response as? HTTPURLResponse else {
                 throw NetworkError.unknown
             }
+
+            logger.logResponse(httpResponse, dataSize: data.count, durationMs: durationMs, url: url)
 
             guard (200...299).contains(httpResponse.statusCode) else {
                 throw NetworkError.httpError(statusCode: httpResponse.statusCode)
@@ -86,11 +96,16 @@ final class DefaultNetworkClient: NetworkClientProtocol {
                 throw NetworkError.noData
             }
 
-            return data
+            return (data, httpResponse)
 
         } catch let error as NetworkError {
+            let durationMs = Int(Date().timeIntervalSince(start) * 1000)
+            logger.logError(error, url: url, durationMs: durationMs)
             throw error
+
         } catch {
+            let durationMs = Int(Date().timeIntervalSince(start) * 1000)
+            logger.logError(error, url: url, durationMs: durationMs)
             throw NetworkError.networkError(error)
         }
     }

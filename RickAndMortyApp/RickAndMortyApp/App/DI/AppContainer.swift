@@ -14,7 +14,8 @@ final class AppContainer: ObservableObject {
     // MARK: - Core
     
     private lazy var networkClient: NetworkClientProtocol = {
-        DefaultNetworkClient()
+        let session = URLSessionFactory.makeCachedSession()
+        return DefaultNetworkClient(session: session)
     }()
     
     // MARK: - Data
