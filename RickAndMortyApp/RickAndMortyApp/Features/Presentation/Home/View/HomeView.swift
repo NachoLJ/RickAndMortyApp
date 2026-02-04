@@ -137,6 +137,9 @@ private struct PreviewFetchCharactersUseCase: FetchCharactersUseCaseProtocol {
                     status: .alive,
                     species: "Human",
                     gender: .male,
+                    origin: "Earth (C-137)",
+                    location: "Citadel of Ricks",
+                    episodes: Array(1...10),
                     imageURL: URL(string: "https://rickandmortyapi.com/api/character/avatar/1.jpeg")!
                 ),
                 CharacterEntity(
@@ -145,6 +148,9 @@ private struct PreviewFetchCharactersUseCase: FetchCharactersUseCaseProtocol {
                     status: .alive,
                     species: "Human",
                     gender: .male,
+                    origin: "Earth (C-137)",
+                    location: "Earth",
+                    episodes: Array(1...8),
                     imageURL: URL(string: "https://rickandmortyapi.com/api/character/avatar/2.jpeg")!
                 )
             ],

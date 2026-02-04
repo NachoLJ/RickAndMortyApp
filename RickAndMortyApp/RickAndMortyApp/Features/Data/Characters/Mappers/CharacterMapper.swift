@@ -20,6 +20,9 @@ enum CharacterMapper {
             status: mapStatus(dto.status),
             species: dto.species,
             gender: mapGender(dto.gender),
+            origin: dto.origin.name,
+            location: dto.location.name,
+            episodes: parseEpisodeNumbers(dto.episode),
             imageURL: url
         )
     }
@@ -38,6 +41,16 @@ enum CharacterMapper {
         case "female": return .female
         case "genderless": return .genderless
         default: return .unknown
+        }
+    }
+    
+    private static func parseEpisodeNumbers(_ urls: [String]) -> [Int] {
+        urls.compactMap { url in
+            guard let lastComponent = url.split(separator: "/").last,
+                  let number = Int(lastComponent) else {
+                return nil
+            }
+            return number
         }
     }
     

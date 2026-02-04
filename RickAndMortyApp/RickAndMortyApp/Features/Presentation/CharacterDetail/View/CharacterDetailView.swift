@@ -40,7 +40,7 @@ struct CharacterDetailView: View {
     private var loadingView: some View {
         VStack {
             ProgressView()
-            Text("Cargando personaje...")
+            Text("Loading character...")
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .padding(.top, 8)
@@ -73,14 +73,26 @@ struct CharacterDetailView: View {
                 
                 // Details
                 VStack(alignment: .leading, spacing: 16) {
-                    DetailRow(label: "Género", value: character.gender.displayName)
-                    DetailRow(label: "Estado", value: character.status.displayName)
-                    DetailRow(label: "Especie", value: character.species)
+                    DetailRow(label: "Species", value: character.species)
+                    DetailRow(label: "Gender", value: character.gender.displayName)
+                    Divider()
+                    DetailRow(label: "Origin", value: character.origin)
+                    DetailRow(label: "Last location", value: character.location)
                 }
                 .padding()
                 .background(Color(.systemGray6))
                 .clipShape(RoundedRectangle(cornerRadius: 12))
                 .padding(.horizontal)
+                
+                // Episodes
+                VStack(alignment: .leading, spacing: 12) {
+                    Text("Episodes (\(character.episodes.count))")
+                        .font(.headline)
+                        .padding(.horizontal)
+                    
+                    episodesGrid(episodes: character.episodes)
+                }
+                .padding(.bottom)
                 
                 Spacer()
             }
@@ -109,7 +121,7 @@ struct CharacterDetailView: View {
                 .font(.system(size: 50))
                 .foregroundStyle(.orange)
             
-            Text("Error al cargar")
+            Text("Error loading")
                 .font(.title2)
                 .fontWeight(.semibold)
             
@@ -124,7 +136,7 @@ struct CharacterDetailView: View {
                     await viewModel.retry()
                 }
             }) {
-                Label("Reintentar", systemImage: "arrow.clockwise")
+                Label("Retry", systemImage: "arrow.clockwise")
                     .font(.headline)
                     .padding()
                     .frame(maxWidth: .infinity)
@@ -136,26 +148,25 @@ struct CharacterDetailView: View {
         }
         .padding()
     }
-}
-
-// MARK: - Supporting Views
-
-private struct DetailRow: View {
-    let label: String
-    let value: String
     
-    var body: some View {
-        HStack {
-            Text(label)
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-            
-            Spacer()
-            
-            Text(value)
-                .font(.body)
-                .fontWeight(.medium)
+    private func episodesGrid(episodes: [Int]) -> some View {
+        let columns = [
+            GridItem(.adaptive(minimum: 60), spacing: 8)
+        ]
+        
+        return LazyVGrid(columns: columns, spacing: 8) {
+            ForEach(episodes, id: \.self) { episodeNumber in
+                Text("E\(episodeNumber)")
+                    .font(.caption)
+                    .fontWeight(.medium)
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(Color.accentColor)
+                    .clipShape(Capsule())
+            }
         }
+        .padding(.horizontal)
     }
 }
 
@@ -176,11 +187,11 @@ private extension CharacterStatus {
     var displayName: String {
         switch self {
         case .alive:
-            return "Vivo"
+            return "Alive"
         case .dead:
-            return "Muerto"
+            return "Dead"
         case .unknown:
-            return "Desconocido"
+            return "Unknown"
         }
     }
 }
@@ -189,13 +200,13 @@ private extension CharacterGender {
     var displayName: String {
         switch self {
         case .male:
-            return "Masculino"
+            return "Male"
         case .female:
-            return "Femenino"
+            return "Female"
         case .genderless:
-            return "Sin género"
+            return "Genderless"
         case .unknown:
-            return "Desconocido"
+            return "Unknown"
         }
     }
 }
@@ -219,6 +230,9 @@ private struct PreviewCharacterDetailRepository: CharacterDetailRepositoryProtoc
             status: .alive,
             species: "Human",
             gender: .male,
+            origin: "Earth (C-137)",
+            location: "Citadel of Ricks",
+            episodes: Array(1...51),
             imageURL: URL(string: "https://rickandmortyapi.com/api/character/avatar/1.jpeg")!
         )
     }
