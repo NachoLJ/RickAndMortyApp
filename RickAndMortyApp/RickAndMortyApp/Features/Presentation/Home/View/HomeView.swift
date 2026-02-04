@@ -46,6 +46,11 @@ struct HomeView: View {
                     }
                 )
             }
+            .safeAreaInset(edge: .bottom) {
+                searchBar
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 8)
+            }
     }
     
     @ViewBuilder
@@ -55,6 +60,8 @@ struct HomeView: View {
             loadingView
         case .loaded(let items):
             loadedView(items: items)
+        case .empty:
+            emptyView
         case .error(let message):
             errorView(message: message)
         }
@@ -63,6 +70,22 @@ struct HomeView: View {
     private var loadingView: some View {
         ProgressView()
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+    
+    private var searchBar: some View {
+        SearchBarView(
+            text: Binding(
+                get: { viewModel.filters.name ?? "" },
+                set: { viewModel.filters.name = $0.isEmpty ? nil : $0 }
+            ),
+            placeholder: "Search by name",
+            onClear: {
+                viewModel.onSearchClear()
+            }
+        )
+        .onSubmit {
+            viewModel.onSearchSubmit()
+        }
     }
     
     private func loadedView(items: [CharacterRowModel]) -> some View {
@@ -90,6 +113,12 @@ struct HomeView: View {
         .onAppear {
             viewModel.loadNextPageIfNeeded(currentItemID: item.id)
         }
+    }
+    
+    private var emptyView: some View {
+        EmptyStateView(onClearFilters: {
+            viewModel.clearAllFilters()
+        })
     }
     
     private func errorView(message: String) -> some View {
@@ -125,7 +154,7 @@ struct HomeView: View {
                 ZStack(alignment: .topTrailing) {
                     Image(systemName: "line.3.horizontal.decrease.circle")
                     
-                    if viewModel.filters.isActive {
+                    if viewModel.filters.hasFilters {
                         Circle()
                             .fill(Color.accentColor)
                             .frame(width: 8, height: 8)

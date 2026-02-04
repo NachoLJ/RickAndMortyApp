@@ -52,9 +52,7 @@ struct FilterSheetView: View {
                 }
             }
             .safeAreaInset(edge: .bottom) {
-                if localFilters.isActive {
-                    resetButton
-                }
+                resetButton
             }
         }
         .presentationDetents([.medium])
@@ -83,17 +81,21 @@ struct FilterSheetView: View {
     
     private var resetButton: some View {
         Button(action: {
-            localFilters.reset()
+            localFilters.resetFilters()
+            filters = localFilters
+            onApply()
+            dismiss()
         }) {
             Text("Reset Filters")
                 .font(.headline)
                 .frame(maxWidth: .infinity)
                 .padding()
-                .background(Color(.systemGray6))
+                .background(Color(.systemGray6).opacity(0.5))
                 .foregroundStyle(.primary)
                 .cornerRadius(16)
         }
         .padding()
+        .disabled(!localFilters.hasFilters)
     }
 }
 

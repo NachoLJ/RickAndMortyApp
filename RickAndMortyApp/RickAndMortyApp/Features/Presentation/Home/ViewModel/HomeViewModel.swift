@@ -12,12 +12,6 @@ import SwiftUI
 @MainActor
 final class HomeViewModel: ObservableObject {
     
-    private func debugLog(_ message: String) {
-#if DEBUG
-        print("🟣 [HomeVM] \(message)")
-#endif
-    }
-    
     // MARK: - Dependencies
     private let fetchCharactersUseCase: FetchCharactersUseCaseProtocol
     private let router: Router
@@ -68,6 +62,29 @@ final class HomeViewModel: ObservableObject {
         }
     }
     
+    func onSearchSubmit() {
+        debugLog("Search submitted: name=\(String(describing: filters.name))")
+        Task {
+            await loadInitialCharacters()
+        }
+    }
+    
+    func onSearchClear() {
+        debugLog("Search cleared")
+        filters.name = nil
+        Task {
+            await loadInitialCharacters()
+        }
+    }
+    
+    func clearAllFilters() {
+        debugLog("Clear all filters")
+        filters.reset()
+        Task {
+            await loadInitialCharacters()
+        }
+    }
+    
     func loadNextPageIfNeeded(currentItemID: Int) {
         guard !isLoadingNextPage else { return }
         guard let nextPage else { return }
@@ -109,7 +126,7 @@ final class HomeViewModel: ObservableObject {
         do {
             let params = CharactersParameters(
                 page: page,
-                name: nil,
+                name: filters.name,
                 status: filters.status,
                 gender: filters.gender
             )
@@ -133,11 +150,27 @@ final class HomeViewModel: ObservableObject {
                 state.content = .loaded(current + newRows)
                 debugLog("🧩 appended -> total=\((current + newRows).count)")
             } else {
-                state.content = .loaded(newRows)
-                debugLog("🧩 replaced -> total=\(newRows.count)")
+                // Si no hay resultados y hay filtros activos, mostrar estado vacío
+                if newRows.isEmpty && filters.isActive {
+                    state.content = .empty
+                    debugLog("🔍 Empty result with active filters")
+                } else {
+                    state.content = .loaded(newRows)
+                    debugLog("🧩 replaced -> total=\(newRows.count)")
+                }
             }
         } catch {
             debugLog("❌ failed page=\(page) error=\(error)")
+            
+            // Detectar error 404 (no results) cuando hay filtros activos
+            if let networkError = error as? NetworkError,
+               case .httpError(statusCode: 404) = networkError,
+               filters.isActive {
+                // 404 con filtros = sin resultados, no es un error real
+                state.content = .empty
+                debugLog("🔍 No results found for current filters (404)")
+                return
+            }
             
             if page == 1 {
                 // Error inicial: pantalla completa de error, NO alert
@@ -177,5 +210,14 @@ final class HomeViewModel: ObservableObject {
                 break
             }
         }
+    }
+}
+
+// MARK: - Extension
+extension HomeViewModel {
+    private func debugLog(_ message: String) {
+#if DEBUG
+        print("🟣 [HomeVM] \(message)")
+#endif
     }
 }

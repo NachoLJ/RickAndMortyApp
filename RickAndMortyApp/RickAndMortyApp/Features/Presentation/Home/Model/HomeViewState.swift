@@ -12,6 +12,7 @@ struct HomeViewState: Equatable {
     enum Content: Equatable {
         case loading
         case loaded([CharacterRowModel])
+        case empty
         case error(message: String)
     }
     
