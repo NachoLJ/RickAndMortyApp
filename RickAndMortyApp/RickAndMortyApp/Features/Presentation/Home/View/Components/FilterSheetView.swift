@@ -56,7 +56,7 @@ struct FilterSheetView: View {
             }
         }
         .presentationDetents([.medium])
-        .presentationDragIndicator(.hidden)
+        .presentationDragIndicator(.visible)
     }
     
     private var statusPicker: some View {
