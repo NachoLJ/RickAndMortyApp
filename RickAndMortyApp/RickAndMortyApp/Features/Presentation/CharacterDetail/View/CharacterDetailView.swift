@@ -63,13 +63,8 @@ struct CharacterDetailView: View {
                     .fontWeight(.bold)
                     .multilineTextAlignment(.center)
                 
-                // Status & Species
-                HStack(spacing: 16) {
-                    statusBadge(character.status)
-                    Text(character.species)
-                        .font(.headline)
-                        .foregroundStyle(.secondary)
-                }
+                // Status
+                statusBadge(character.status)
                 
                 // Details
                 VStack(alignment: .leading, spacing: 16) {

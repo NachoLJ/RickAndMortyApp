@@ -25,6 +25,7 @@ final class HomeViewModel: ObservableObject {
     // MARK: - State
     @Published private(set) var state = HomeViewState()
     @Published var alertError: AlertError? = nil
+    @Published var filters = CharactersFilters()
     
     // Pagination control
     private var nextPage: Int? = 1
@@ -58,6 +59,13 @@ final class HomeViewModel: ObservableObject {
     func didSelectCharacter(id: Int) {
         debugLog("Character selected: \(id)")
         router.push(.characterDetail(id: id))
+    }
+    
+    func applyFilters() {
+        debugLog("Applying filters: status=\(String(describing: filters.status)), gender=\(String(describing: filters.gender))")
+        Task {
+            await loadInitialCharacters()
+        }
     }
     
     func loadNextPageIfNeeded(currentItemID: Int) {
@@ -99,7 +107,12 @@ final class HomeViewModel: ObservableObject {
         debugLog("➡️ start request page=\(page) append=\(append)")
 
         do {
-            let query = CharactersQuery(page: page)
+            let query = CharactersQuery(
+                page: page,
+                name: nil,
+                status: filters.status,
+                gender: filters.gender
+            )
             let pageResult = try await fetchCharactersUseCase.execute(query: query)
 
             debugLog("✅ success page=\(page) received=\(pageResult.items.count) nextPage=\(String(describing: pageResult.nextPage))")

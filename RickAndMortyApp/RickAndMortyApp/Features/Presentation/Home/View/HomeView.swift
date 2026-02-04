@@ -9,8 +9,10 @@ import SwiftUI
 
 struct HomeView: View {
     
-    @StateObject private var viewModel: HomeViewModel
     @EnvironmentObject private var container: AppContainer
+    
+    @StateObject private var viewModel: HomeViewModel
+    @State private var isFilterSheetPresented = false
     
     private let columns = [
         GridItem(.flexible()),
@@ -35,6 +37,14 @@ struct HomeView: View {
             }
             .task {
                 viewModel.onAppear()
+            }
+            .sheet(isPresented: $isFilterSheetPresented) {
+                FilterSheetView(
+                    filters: $viewModel.filters,
+                    onApply: {
+                        viewModel.applyFilters()
+                    }
+                )
             }
     }
     
@@ -110,11 +120,20 @@ struct HomeView: View {
     private func toolbarContent() -> some ToolbarContent {
         ToolbarItem(placement: .topBarTrailing) {
             Button {
-                // TODO: filter/sort
+                isFilterSheetPresented = true
             } label: {
-                Image(systemName: "line.3.horizontal.decrease.circle")
+                ZStack(alignment: .topTrailing) {
+                    Image(systemName: "line.3.horizontal.decrease.circle")
+                    
+                    if viewModel.filters.isActive {
+                        Circle()
+                            .fill(Color.accentColor)
+                            .frame(width: 8, height: 8)
+                            .offset(x: 4, y: -4)
+                    }
+                }
             }
-            .accessibilityLabel("Filter and sort")
+            .accessibilityLabel("Filters")
         }
     }
 }
