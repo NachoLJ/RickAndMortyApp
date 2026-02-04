@@ -8,7 +8,7 @@
 import Foundation
 
 protocol FetchCharactersUseCaseProtocol: Sendable {
-    func execute(query: CharactersQuery) async throws -> CharactersPageEntity
+    func execute(params: CharactersParameters) async throws -> CharactersPageEntity
 }
 
 struct FetchCharactersUseCase: FetchCharactersUseCaseProtocol {
@@ -19,7 +19,7 @@ struct FetchCharactersUseCase: FetchCharactersUseCaseProtocol {
         self.repository = repository
     }
     
-    func execute(query: CharactersQuery) async throws -> CharactersPageEntity {
-        try await repository.fetchCharacters(query: query)
+    func execute(params: CharactersParameters) async throws -> CharactersPageEntity {
+        try await repository.fetchCharacters(params: params)
     }
 }

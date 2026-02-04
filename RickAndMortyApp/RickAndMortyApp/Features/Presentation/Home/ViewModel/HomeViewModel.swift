@@ -107,13 +107,13 @@ final class HomeViewModel: ObservableObject {
         debugLog("➡️ start request page=\(page) append=\(append)")
 
         do {
-            let query = CharactersQuery(
+            let params = CharactersParameters(
                 page: page,
                 name: nil,
                 status: filters.status,
                 gender: filters.gender
             )
-            let pageResult = try await fetchCharactersUseCase.execute(query: query)
+            let pageResult = try await fetchCharactersUseCase.execute(params: params)
 
             debugLog("✅ success page=\(page) received=\(pageResult.items.count) nextPage=\(String(describing: pageResult.nextPage))")
 

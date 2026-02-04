@@ -15,12 +15,12 @@ final class DefaultCharactersRepository: CharactersRepositoryProtocol {
         self.networkClient = networkClient
     }
     
-    func fetchCharacters(query: CharactersQuery) async throws -> CharactersPageEntity {
+    func fetchCharacters(params: CharactersParameters) async throws -> CharactersPageEntity {
         let endpoint = CharactersEndpoint.list(
-            page: query.page,
-            name: query.name,
-            status: query.status?.rawValue,
-            gender: query.gender?.rawValue
+            page: params.page,
+            name: params.name,
+            status: params.status?.rawValue,
+            gender: params.gender?.rawValue
         )
         
         let dto: CharactersPageDTO = try await networkClient.request(endpoint: endpoint)

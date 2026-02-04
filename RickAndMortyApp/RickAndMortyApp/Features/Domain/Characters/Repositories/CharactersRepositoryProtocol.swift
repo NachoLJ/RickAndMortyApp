@@ -8,5 +8,5 @@
 import Foundation
 
 protocol CharactersRepositoryProtocol: Sendable {
-    func fetchCharacters(query: CharactersQuery) async throws -> CharactersPageEntity
+    func fetchCharacters(params: CharactersParameters) async throws -> CharactersPageEntity
 }

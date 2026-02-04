@@ -1,5 +1,5 @@
 //
-//  CharactersQuery.swift
+//  CharactersParameters.swift
 //  RickAndMortyApp
 //
 //  Created by Ignacio Lopez Jimenez on 2/2/26.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct CharactersQuery: Equatable, Sendable {
+struct CharactersParameters: Equatable, Sendable {
     var page: Int
     var name: String?
     var status: CharacterStatus?

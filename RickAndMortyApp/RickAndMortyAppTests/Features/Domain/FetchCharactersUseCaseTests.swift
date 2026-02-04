@@ -28,15 +28,15 @@ final class FetchCharactersUseCaseTests: XCTestCase {
 
         let fakeRepo = FakeCharactersRepository(result: .success(expected))
         let sut = FetchCharactersUseCase(repository: fakeRepo)
-        let query = CharactersQuery(page: 1)
+        let params = CharactersParameters(page: 1)
 
         // Act
-        let page = try await sut.execute(query: query)
+        let page = try await sut.execute(params: params)
 
         // Assert
         XCTAssertEqual(page, expected)
-        let received = await fakeRepo.receivedQueries()
-        XCTAssertEqual(received, [query])
+        let received = await fakeRepo.receivedParameters()
+        XCTAssertEqual(received, [params])
     }
 
     func test_execute_propagatesError() async {
@@ -47,7 +47,7 @@ final class FetchCharactersUseCaseTests: XCTestCase {
 
         // Act + Assert
         do {
-            _ = try await sut.execute(query: CharactersQuery(page: 1))
+            _ = try await sut.execute(params: CharactersParameters(page: 1))
             XCTFail("Expected error to be thrown")
         } catch {
             XCTAssertEqual(error as? TestError, fakeError)
@@ -60,19 +60,19 @@ final class FetchCharactersUseCaseTests: XCTestCase {
 private actor FakeCharactersRepository: CharactersRepositoryProtocol {
 
     private let result: Result<CharactersPageEntity, Error>
-    private var queries: [CharactersQuery] = []
+    private var parameters: [CharactersParameters] = []
 
     init(result: Result<CharactersPageEntity, Error>) {
         self.result = result
     }
 
-    func fetchCharacters(query: CharactersQuery) async throws -> CharactersPageEntity {
-        queries.append(query)
+    func fetchCharacters(params: CharactersParameters) async throws -> CharactersPageEntity {
+        parameters.append(params)
         return try result.get()
     }
 
-    func receivedQueries() -> [CharactersQuery] {
-        queries
+    func receivedParameters() -> [CharactersParameters] {
+        parameters
     }
 }
 

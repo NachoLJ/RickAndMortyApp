@@ -147,7 +147,7 @@ struct HomeView: View {
 }
 
 private struct PreviewFetchCharactersUseCase: FetchCharactersUseCaseProtocol {
-    func execute(query: CharactersQuery) async throws -> CharactersPageEntity {
+    func execute(params: CharactersParameters) async throws -> CharactersPageEntity {
         CharactersPageEntity(
             items: [
                 CharacterEntity(
