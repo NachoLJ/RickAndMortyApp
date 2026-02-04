@@ -12,19 +12,16 @@ struct CharactersParameters: Equatable, Sendable {
     var name: String?
     var status: CharacterStatus?
     var gender: CharacterGender?
-    var sort: CharactersSort?
     
     init(
         page: Int = 1,
         name: String? = nil,
         status: CharacterStatus? = nil,
-        gender: CharacterGender? = nil,
-        sort: CharactersSort? = nil
+        gender: CharacterGender? = nil
     ) {
         self.page = page
         self.name = name
         self.status = status
         self.gender = gender
-        self.sort = sort
     }
 }

@@ -20,6 +20,9 @@ final class FetchCharactersUseCaseTests: XCTestCase {
                     status: .alive,
                     species: "Human",
                     gender: .male,
+                    origin: "Earth",
+                    location: "Earth",
+                    episodes: [1],
                     imageURL: URL(string: "https://example.com/1.png")!
                 )
             ],

@@ -14,14 +14,17 @@ final class CharacterDetailViewModel: ObservableObject {
     @Published private(set) var state: CharacterDetailViewState = .loading
     
     private let characterId: Int
-    private let fetchCharacterUseCase: FetchCharacterByIdUseCase
+    private let fetchCharacterUseCase: FetchCharacterByIdUseCaseProtocol
     
-    init(characterId: Int, fetchCharacterUseCase: FetchCharacterByIdUseCase) {
+    init(characterId: Int, fetchCharacterUseCase: FetchCharacterByIdUseCaseProtocol) {
         self.characterId = characterId
         self.fetchCharacterUseCase = fetchCharacterUseCase
     }
     
     func loadCharacter() async {
+        // Skip reload if already loaded
+        if case .loaded = state { return }
+        
         state = .loading
         
         do {

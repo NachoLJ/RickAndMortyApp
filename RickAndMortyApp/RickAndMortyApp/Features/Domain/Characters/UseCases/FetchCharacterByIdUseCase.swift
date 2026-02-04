@@ -7,7 +7,11 @@
 
 import Foundation
 
-final class FetchCharacterByIdUseCase: Sendable {
+protocol FetchCharacterByIdUseCaseProtocol: Sendable {
+    func execute(id: Int) async throws -> CharacterEntity
+}
+
+final class FetchCharacterByIdUseCase: FetchCharacterByIdUseCaseProtocol, Sendable {
     
     private let repository: CharacterDetailRepositoryProtocol
     

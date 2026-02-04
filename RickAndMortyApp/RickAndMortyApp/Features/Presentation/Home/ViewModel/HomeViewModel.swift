@@ -14,7 +14,7 @@ final class HomeViewModel: ObservableObject {
     
     // MARK: - Dependencies
     private let fetchCharactersUseCase: FetchCharactersUseCaseProtocol
-    private let router: Router
+    private let router: RouterProtocol
     
     // MARK: - State
     @Published private(set) var state = HomeViewState()
@@ -27,7 +27,7 @@ final class HomeViewModel: ObservableObject {
     private var currentlyLoadingPage: Int? = nil
     
     // MARK: - Init
-    init(fetchCharactersUseCase: FetchCharactersUseCaseProtocol, router: Router) {
+    init(fetchCharactersUseCase: FetchCharactersUseCaseProtocol, router: RouterProtocol) {
         self.fetchCharactersUseCase = fetchCharactersUseCase
         self.router = router
     }
@@ -92,18 +92,18 @@ final class HomeViewModel: ObservableObject {
         
         // ✅ Prevent loading the same page multiple times
         guard currentlyLoadingPage != nextPage else { return }
-
+        
         let threshold = 6
         guard let index = items.firstIndex(where: { $0.id == currentItemID }) else { return }
         let shouldLoadMore = index >= (items.count - threshold)
         guard shouldLoadMore else { return }
-
+        
         debugLog("trigger load more at index \(index)/\(items.count - 1) | currentItemID=\(currentItemID) | requesting page \(nextPage)")
-
+        
         // ✅ Lock both flags BEFORE starting the async task
         isLoadingNextPage = true
         currentlyLoadingPage = nextPage
-
+        
         Task { await loadCharactersPage(page: nextPage, append: true) }
     }
     
@@ -116,13 +116,13 @@ final class HomeViewModel: ObservableObject {
     }
     
     private func loadCharactersPage(page: Int, append: Bool) async {
-        defer { 
+        defer {
             isLoadingNextPage = false
             currentlyLoadingPage = nil
         }
-
+        
         debugLog("➡️ start request page=\(page) append=\(append)")
-
+        
         do {
             let params = CharactersParameters(
                 page: page,
@@ -131,9 +131,9 @@ final class HomeViewModel: ObservableObject {
                 gender: filters.gender
             )
             let pageResult = try await fetchCharactersUseCase.execute(params: params)
-
+            
             debugLog("✅ success page=\(page) received=\(pageResult.items.count) nextPage=\(String(describing: pageResult.nextPage))")
-
+            
             let newRows = pageResult.items.map { entity in
                 CharacterRowModel(
                     id: entity.id,
@@ -143,9 +143,9 @@ final class HomeViewModel: ObservableObject {
                     imageURL: entity.imageURL
                 )
             }
-
+            
             nextPage = pageResult.nextPage
-
+            
             if append, case .loaded(let current) = state.content {
                 state.content = .loaded(current + newRows)
                 debugLog("🧩 appended -> total=\((current + newRows).count)")
@@ -190,8 +190,8 @@ final class HomeViewModel: ObservableObject {
                 // Check if it's a connectivity issue (no internet)
                 if let urlError = error as? URLError {
                     if urlError.code == .notConnectedToInternet ||
-                       urlError.code == .networkConnectionLost ||
-                       urlError.code == .timedOut {
+                        urlError.code == .networkConnectionLost ||
+                        urlError.code == .timedOut {
                         alertError = AlertError(
                             title: "Connection Error",
                             message: "Lost in the multiverse! Check your internet connection."

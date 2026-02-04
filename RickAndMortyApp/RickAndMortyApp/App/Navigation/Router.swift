@@ -8,9 +8,19 @@
 import SwiftUI
 import Combine
 
+/// Protocol for navigation actions
+@MainActor
+protocol RouterProtocol: AnyObject {
+    func push(_ route: AppRoute)
+    func pop()
+    func popToRoot()
+    func replace(with route: AppRoute)
+    func setRoot(_ route: AppRoute)
+}
+
 /// Centralized navigation manager using NavigationStack's path
 @MainActor
-final class Router: ObservableObject {
+final class Router: ObservableObject, RouterProtocol {
     
     /// Navigation path that drives the NavigationStack
     @Published var path = NavigationPath()

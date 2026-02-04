@@ -1,11 +1,15 @@
 //
-//  DefaultCharactersRepository.swift
+//  CharactersRepository.swift
 //  RickAndMortyApp
 //
 //  Created by Ignacio Lopez Jimenez on 2/2/26.
 //
 
 import Foundation
+
+protocol CharactersRepositoryProtocol: Sendable {
+    func fetchCharacters(params: CharactersParameters) async throws -> CharactersPageEntity
+}
 
 final class DefaultCharactersRepository: CharactersRepositoryProtocol {
     
