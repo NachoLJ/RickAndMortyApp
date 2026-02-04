@@ -16,7 +16,7 @@ final class DefaultCharactersRepository: CharactersRepositoryProtocol {
     }
     
     func fetchCharacters(query: CharactersQuery) async throws -> CharactersPageEntity {
-        let endpoint = CharactersEndpoint(
+        let endpoint = CharactersEndpoint.list(
             page: query.page,
             name: query.name,
             status: query.status?.rawValue,

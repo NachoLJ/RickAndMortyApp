@@ -7,14 +7,35 @@
 
 import Foundation
 
-struct CharactersEndpoint: Endpoint {
+enum CharactersEndpoint: Endpoint {
+    case list(page: Int, name: String?, status: String?, gender: String?)
+    case character(id: Int)
     
-    let path: String = "/api/character"
-    let method: HttpMethod = .get
+    var path: String {
+        switch self {
+        case .list:
+            return "/api/character"
+        case .character(let id):
+            return "/api/character/\(id)"
+        }
+    }
     
-    let queryItems: [URLQueryItem]
+    var method: HttpMethod { .get }
     
-    init(page: Int, name: String?, status: String?, gender: String?) {
+    var queryItems: [URLQueryItem] {
+        switch self {
+        case .list(let page, let name, let status, let gender):
+            return makeListQueryItems(page: page, name: name, status: status, gender: gender)
+        case .character:
+            return []
+        }
+    }
+    
+    var baseURL: URL {
+        URL(string: "https://rickandmortyapi.com")!
+    }
+    
+    private func makeListQueryItems(page: Int, name: String?, status: String?, gender: String?) -> [URLQueryItem] {
         var items: [URLQueryItem] = [
             URLQueryItem(name: "page", value: String(page))
         ]
@@ -31,11 +52,7 @@ struct CharactersEndpoint: Endpoint {
             items.append(URLQueryItem(name: "gender", value: gender))
         }
         
-        self.queryItems = items
-    }
-    
-    var baseURL: URL {
-        URL(string: "https://rickandmortyapi.com")!
+        return items
     }
     
     var body: Data? { nil }

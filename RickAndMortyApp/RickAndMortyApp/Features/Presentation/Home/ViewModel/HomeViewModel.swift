@@ -20,6 +20,7 @@ final class HomeViewModel: ObservableObject {
     
     // MARK: - Dependencies
     private let fetchCharactersUseCase: FetchCharactersUseCaseProtocol
+    private let router: Router
     
     // MARK: - State
     @Published private(set) var state = HomeViewState()
@@ -31,8 +32,9 @@ final class HomeViewModel: ObservableObject {
     private var currentlyLoadingPage: Int? = nil
     
     // MARK: - Init
-    init(fetchCharactersUseCase: FetchCharactersUseCaseProtocol) {
+    init(fetchCharactersUseCase: FetchCharactersUseCaseProtocol, router: Router) {
         self.fetchCharactersUseCase = fetchCharactersUseCase
+        self.router = router
     }
     
     // MARK: - Lifecycle
@@ -51,6 +53,11 @@ final class HomeViewModel: ObservableObject {
         Task {
             await loadInitialCharacters()
         }
+    }
+    
+    func didSelectCharacter(id: Int) {
+        debugLog("Character selected: \(id)")
+        router.push(.characterDetail(id: id))
     }
     
     func loadNextPageIfNeeded(currentItemID: Int) {

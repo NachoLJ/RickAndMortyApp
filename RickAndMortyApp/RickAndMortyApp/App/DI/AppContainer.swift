@@ -24,6 +24,10 @@ final class AppContainer: ObservableObject {
         DefaultCharactersRepository(networkClient: networkClient)
     }()
     
+    private lazy var characterDetailRepository: CharacterDetailRepositoryProtocol = {
+        DefaultCharacterDetailRepository(networkClient: networkClient)
+    }()
+    
     private lazy var imageRepository: ImageRepositoryProtocol = {
         DefaultImageRepository(networkClient: networkClient)
     }()
@@ -34,10 +38,21 @@ final class AppContainer: ObservableObject {
         FetchCharactersUseCase(repository: charactersRepository)
     }()
     
+    private lazy var fetchCharacterByIdUseCase: FetchCharacterByIdUseCase = {
+        FetchCharacterByIdUseCase(repository: characterDetailRepository)
+    }()
+    
     // MARK: - Presentation
     
-    func makeHomeViewModel() -> HomeViewModel {
-        HomeViewModel(fetchCharactersUseCase: fetchCharactersUseCase)
+    func makeHomeViewModel(router: Router) -> HomeViewModel {
+        HomeViewModel(fetchCharactersUseCase: fetchCharactersUseCase, router: router)
+    }
+    
+    func makeCharacterDetailViewModel(characterId: Int) -> CharacterDetailViewModel {
+        CharacterDetailViewModel(
+            characterId: characterId,
+            fetchCharacterUseCase: fetchCharacterByIdUseCase
+        )
     }
 
     func makeImageLoader(url: URL?) -> ImageLoader {
