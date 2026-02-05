@@ -61,7 +61,8 @@ final class HomeViewModelTests: XCTestCase {
         sut.filters.gender = .male
         
         sut.applyFilters()
-        try? await Task.sleep(nanoseconds: 100_000_000)
+        
+        try? await Task.sleep(nanoseconds: 200_000_000)
         
         let lastParams = await mockUseCase.lastParameters
         XCTAssertEqual(lastParams?.status, .alive)

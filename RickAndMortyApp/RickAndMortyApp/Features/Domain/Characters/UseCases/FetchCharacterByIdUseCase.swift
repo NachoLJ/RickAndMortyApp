@@ -11,6 +11,7 @@ protocol FetchCharacterByIdUseCaseProtocol: Sendable {
     func execute(id: Int) async throws -> CharacterEntity
 }
 
+/// Fetches a single character by ID
 struct FetchCharacterByIdUseCase: FetchCharacterByIdUseCaseProtocol {
     private let repository: CharacterDetailRepositoryProtocol
     

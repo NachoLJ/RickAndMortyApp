@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// Main navigation container with stack-based routing
 struct MainFlowView: View {
     @EnvironmentObject private var container: AppContainer
     @StateObject private var router = Router()

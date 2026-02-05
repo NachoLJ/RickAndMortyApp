@@ -18,7 +18,7 @@ final class HomeViewModel: ObservableObject {
     @Published var alertError: AlertError? = nil
     @Published var filters = CharactersFilters()
     
-    // Pagination control
+    /// Pagination control to prevent duplicate requests
     private var nextPage: Int? = 1
     private var isLoadingNextPage: Bool = false
     private var currentlyLoadingPage: Int? = nil
@@ -30,6 +30,7 @@ final class HomeViewModel: ObservableObject {
     
     // MARK: - Lifecycle
     
+    /// Loads initial character list when view appears (only if not already loaded)
     func onAppear() {
         if case .loaded = state.content { return }
         
@@ -76,12 +77,13 @@ final class HomeViewModel: ObservableObject {
         }
     }
     
+    /// Loads next page when user scrolls near the end of the list
     func loadNextPageIfNeeded(currentItemID: Int) {
         guard !isLoadingNextPage else { return }
         guard let nextPage else { return }
         guard case .loaded(let items) = state.content else { return }
         
-        // Prevent loading the same page multiple times
+        /// Prevent loading the same page multiple times
         guard currentlyLoadingPage != nextPage else { return }
         
         let threshold = 6
@@ -91,7 +93,7 @@ final class HomeViewModel: ObservableObject {
         
         print("[HomeVM] Requesting page \(nextPage)")
         
-        // Lock both flags BEFORE starting the async task
+        /// Lock both flags BEFORE starting the async task to prevent race conditions
         isLoadingNextPage = true
         currentlyLoadingPage = nextPage
         
@@ -99,6 +101,8 @@ final class HomeViewModel: ObservableObject {
     }
     
     // MARK: - Private Methods
+    
+    /// Resets pagination and loads first page of characters
     private func loadInitialCharacters() async {
         nextPage = 1
         state.content = .loading
@@ -106,6 +110,7 @@ final class HomeViewModel: ObservableObject {
         await loadCharactersPage(page: 1, append: false)
     }
     
+    /// Fetches a specific page and either replaces or appends results
     private func loadCharactersPage(page: Int, append: Bool) async {
         defer {
             isLoadingNextPage = false
@@ -144,7 +149,7 @@ final class HomeViewModel: ObservableObject {
                 }
             }
         } catch {
-            // API returns 404 when filters match nothing = empty state, not error
+            /// API returns 404 when filters match nothing = empty state, not error
             if let networkError = error as? NetworkError,
                case .httpError(statusCode: 404) = networkError,
                filters.isActive {

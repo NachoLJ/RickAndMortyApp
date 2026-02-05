@@ -11,6 +11,7 @@ protocol CharacterDetailRepositoryProtocol: Sendable {
     func fetchCharacter(id: Int) async throws -> CharacterEntity
 }
 
+/// Fetches single character from API and maps to domain entity
 final class DefaultCharacterDetailRepository: CharacterDetailRepositoryProtocol {
     private let networkClient: NetworkClientProtocol
     

@@ -20,6 +20,7 @@ final class CharacterDetailViewModel: ObservableObject {
         self.fetchCharacterUseCase = fetchCharacterUseCase
     }
     
+    /// Fetches character data by ID from use case
     func loadCharacter() async {
         if case .loaded = state { return }
         

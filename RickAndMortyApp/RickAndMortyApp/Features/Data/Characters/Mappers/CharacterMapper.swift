@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Maps CharacterDTO from API to domain CharacterEntity
 enum CharacterMapper {
     static func map(_ dto: CharacterDTO) throws -> CharacterEntity {
         guard let url = URL(string: dto.image) else {
@@ -43,7 +44,7 @@ enum CharacterMapper {
         }
     }
     
-    // Extracts episode numbers from episode URLs (e.g., ".../episode/1" -> 1)
+    /// Extracts episode numbers from episode URLs (e.g., ".../episode/1" -> 1)
     private static func parseEpisodeNumbers(_ urls: [String]) -> [Int] {
         urls.compactMap { url in
             guard let lastComponent = url.split(separator: "/").last,

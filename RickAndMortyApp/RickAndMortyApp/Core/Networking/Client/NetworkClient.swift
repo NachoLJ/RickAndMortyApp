@@ -12,6 +12,7 @@ protocol NetworkClientProtocol: Sendable {
     func fetchImage(from url: URL) async throws -> Data
 }
 
+/// Handles HTTP requests with logging and error handling
 final class DefaultNetworkClient: NetworkClientProtocol {
     private let session: URLSession
     private let decoder: JSONDecoder
@@ -68,6 +69,8 @@ private extension DefaultNetworkClient {
         return request
     }
 
+    /// Executes HTTP request with logging and error handling
+    /// - Note: URLSession automatically checks URLCache before making network request
     func perform(_ request: URLRequest) async throws -> (Data, HTTPURLResponse) {
         let url = request.url ?? URL(string: "about:blank")!
 

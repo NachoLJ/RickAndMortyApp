@@ -17,6 +17,7 @@ protocol RouterProtocol: AnyObject {
     func setRoot(_ route: AppRoute)
 }
 
+/// Manages app navigation stack
 @MainActor
 final class Router: ObservableObject, RouterProtocol {
     @Published var path = NavigationPath()
@@ -36,6 +37,7 @@ final class Router: ObservableObject, RouterProtocol {
         path.removeLast(path.count)
     }
     
+    /// Replaces current route with new one
     func replace(with route: AppRoute) {
         if !path.isEmpty {
             path.removeLast()
@@ -43,6 +45,7 @@ final class Router: ObservableObject, RouterProtocol {
         path.append(route)
     }
     
+    /// Resets to root and pushes new route
     func setRoot(_ route: AppRoute) {
         popToRoot()
         push(route)

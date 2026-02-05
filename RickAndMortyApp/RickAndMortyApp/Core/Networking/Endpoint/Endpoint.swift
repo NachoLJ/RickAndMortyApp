@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Protocol defining the structure of API endpoints
 protocol Endpoint {
     var baseURL: URL { get }
     var path: String { get }

@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 
+/// In-memory image cache with size limits
 final class ImageCache {
     static let shared = ImageCache()
     

@@ -14,6 +14,7 @@ protocol NetworkLoggerProtocol: Sendable {
     func logError(_ error: Error, url: URL, durationMs: Int)
 }
 
+/// Network logger using os.Logger for DEBUG builds only
 struct NetworkLogger: NetworkLoggerProtocol {
     private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "RickAndMortyApp",
                                 category: "Network")
@@ -29,6 +30,7 @@ struct NetworkLogger: NetworkLoggerProtocol {
     func logResponse(_ response: HTTPURLResponse, dataSize: Int, durationMs: Int, url: URL) {
         #if DEBUG
         let status = response.statusCode
+        /// Log cache headers to verify caching strategy
         let cacheControl = response.value(forHTTPHeaderField: "Cache-Control") ?? "-"
         let age = response.value(forHTTPHeaderField: "Age") ?? "-"
         let cfCache = response.value(forHTTPHeaderField: "CF-Cache-Status") ?? "-"

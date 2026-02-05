@@ -7,8 +7,11 @@
 
 import Foundation
 
+/// Defines API endpoints for characters
 enum CharactersEndpoint: Endpoint {
+    /// Paginated character list with optional filters (name, status, gender)
     case list(page: Int, name: String?, status: String?, gender: String?)
+    /// Single character by ID
     case character(id: Int)
     
     var path: String {
@@ -35,6 +38,7 @@ enum CharactersEndpoint: Endpoint {
         URL(string: "https://rickandmortyapi.com")!
     }
     
+    /// Builds query parameters for list endpoint, omitting empty filters
     private func makeListQueryItems(page: Int, name: String?, status: String?, gender: String?) -> [URLQueryItem] {
         var items: [URLQueryItem] = [
             URLQueryItem(name: "page", value: String(page))

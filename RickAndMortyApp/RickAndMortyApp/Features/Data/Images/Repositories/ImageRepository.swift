@@ -11,6 +11,7 @@ protocol ImageRepositoryProtocol: Sendable {
     func fetchImageData(from url: URL) async throws -> Data
 }
 
+/// Fetches image data from network
 final class DefaultImageRepository: ImageRepositoryProtocol {
     private let networkClient: NetworkClientProtocol
 

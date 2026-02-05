@@ -17,7 +17,6 @@ struct HomeView: View {
         GridItem(.flexible())
     ]
     
-    // DI initializer (for tests, previews, container)
     init(viewModel: HomeViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }

@@ -11,6 +11,7 @@ protocol FetchCharactersUseCaseProtocol: Sendable {
     func execute(params: CharactersParameters) async throws -> CharactersPageEntity
 }
 
+/// Fetches paginated characters list with optional filters
 struct FetchCharactersUseCase: FetchCharactersUseCaseProtocol {
     private let repository: CharactersRepositoryProtocol
     

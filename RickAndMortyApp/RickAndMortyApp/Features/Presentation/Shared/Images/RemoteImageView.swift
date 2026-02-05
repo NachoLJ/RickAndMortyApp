@@ -7,12 +7,13 @@
 
 import SwiftUI
 
+/// Loads and displays remote images with loading states
 struct RemoteImageView: View {
     @StateObject private var loader: ImageLoader
     let contentMode: ContentMode
 
-    init(loader: @autoclosure @escaping () -> ImageLoader, contentMode: ContentMode = .fill) {
-        _loader = StateObject(wrappedValue: loader())
+    init(loader: ImageLoader, contentMode: ContentMode = .fill) {
+        _loader = StateObject(wrappedValue: loader)
         self.contentMode = contentMode
     }
 

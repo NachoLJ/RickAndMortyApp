@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 
+/// Dependency injection container.
 @MainActor
 final class AppContainer: ObservableObject {
     // MARK: - Core

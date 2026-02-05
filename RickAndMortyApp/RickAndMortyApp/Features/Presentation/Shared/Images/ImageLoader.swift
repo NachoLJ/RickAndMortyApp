@@ -31,6 +31,7 @@ final class ImageLoader: ObservableObject {
         performLoad()
     }
     
+    /// Loads image from cache or network with retry on 429 errors
     private func performLoad() {
         isLoading = true
         error = nil
@@ -41,6 +42,7 @@ final class ImageLoader: ObservableObject {
             return
         }
 
+        /// Check cache first for instant display
         if let cached = ImageCache.shared.image(for: url) {
             self.image = cached
             self.isLoading = false
@@ -69,7 +71,8 @@ final class ImageLoader: ObservableObject {
             } catch let error as NetworkError {
                 if Task.isCancelled { return }
                 
-                // Retry 429 error (Too many requests)
+                /// Retry with exponential backoff for rate limit errors
+                /// Delays: 3s, 6s, 12s (formula: 3 * 2^(retry-1))
                 if case .httpError(statusCode: 429) = error, self.retryCount < self.maxRetries {
                     await MainActor.run {
                         self.retryCount += 1

@@ -11,6 +11,7 @@ protocol CharactersRepositoryProtocol: Sendable {
     func fetchCharacters(params: CharactersParameters) async throws -> CharactersPageEntity
 }
 
+/// Fetches characters from API and maps DTOs to domain entities
 final class DefaultCharactersRepository: CharactersRepositoryProtocol {
     private let networkClient: NetworkClientProtocol
     
@@ -35,6 +36,7 @@ final class DefaultCharactersRepository: CharactersRepositoryProtocol {
         return CharactersPageEntity(items: entities, nextPage: nextPage)
     }
     
+    /// Extracts page number from API next URL for pagination
     private func extractNextPage(from nextURLString: String?) -> Int? {
         guard let nextURLString,
               let url = URL(string: nextURLString),

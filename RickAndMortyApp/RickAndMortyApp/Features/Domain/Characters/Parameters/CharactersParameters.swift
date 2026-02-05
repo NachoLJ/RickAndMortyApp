@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Parameters for character list requests with pagination and filters
 struct CharactersParameters: Equatable, Sendable {
     var page: Int
     var name: String?
