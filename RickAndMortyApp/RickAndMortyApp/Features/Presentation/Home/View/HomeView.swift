@@ -51,6 +51,8 @@ struct HomeView: View {
             }
     }
     
+    // MARK: - View Components
+    
     @ViewBuilder
     private var content: some View {
         switch viewModel.state.content {
@@ -143,6 +145,8 @@ struct HomeView: View {
         .padding()
     }
     
+    // MARK: - Toolbar
+    
     @ToolbarContentBuilder
     private func toolbarContent() -> some ToolbarContent {
         ToolbarItem(placement: .topBarTrailing) {
@@ -164,6 +168,8 @@ struct HomeView: View {
         }
     }
 }
+
+// MARK: - Preview
 
 #Preview {
     let router = Router()

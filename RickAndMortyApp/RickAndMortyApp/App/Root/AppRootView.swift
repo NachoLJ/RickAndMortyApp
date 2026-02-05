@@ -22,6 +22,8 @@ struct AppRootView: View {
     }
 }
 
+// MARK: - Preview
+
 #Preview {
     AppRootView()
 }

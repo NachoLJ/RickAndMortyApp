@@ -46,6 +46,8 @@ struct RemoteImageView: View {
     }
 }
 
+// MARK: - Preview
+
 #Preview {
     let mockRepository = PreviewImageRepository()
     let mockLoader = ImageLoader(

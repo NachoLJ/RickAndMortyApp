@@ -23,6 +23,8 @@ struct CharacterDetailView: View {
             }
     }
     
+    // MARK: - View Components
+    
     @ViewBuilder
     private var content: some View {
         switch viewModel.state {
@@ -203,6 +205,8 @@ private extension CharacterGender {
         }
     }
 }
+
+// MARK: - Preview
 
 #Preview {
     let mockRepo = PreviewCharacterDetailRepository()

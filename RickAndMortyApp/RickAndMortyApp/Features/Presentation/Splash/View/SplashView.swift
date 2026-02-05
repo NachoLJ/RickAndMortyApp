@@ -23,6 +23,8 @@ struct SplashView: View {
     }
 }
 
+// MARK: - Preview
+
 #Preview {
     SplashView()
         .environmentObject(AppState())

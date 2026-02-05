@@ -46,6 +46,8 @@ struct SearchBarView: View {
     }
 }
 
+// MARK: - Preview
+
 #Preview {
     VStack {
         SearchBarView(

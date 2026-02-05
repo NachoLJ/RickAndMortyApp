@@ -25,6 +25,9 @@ struct DetailRow: View {
         }
     }
 }
+
+// MARK: - Preview
+
 #Preview {
     DetailRow(label: "Label", value: "Value")
 }

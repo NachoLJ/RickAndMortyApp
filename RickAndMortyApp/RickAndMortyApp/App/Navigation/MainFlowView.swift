@@ -22,6 +22,8 @@ struct MainFlowView: View {
     }
 }
 
+// MARK: - Preview
+
 #Preview {
     MainFlowView()
         .environmentObject(AppContainer())
