@@ -12,7 +12,6 @@ protocol ImageRepositoryProtocol: Sendable {
 }
 
 final class DefaultImageRepository: ImageRepositoryProtocol {
-
     private let networkClient: NetworkClientProtocol
 
     init(networkClient: NetworkClientProtocol) {

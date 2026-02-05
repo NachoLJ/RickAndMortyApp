@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct SearchBarView: View {
-    
     @Binding var text: String
     let placeholder: String
     let onClear: () -> Void

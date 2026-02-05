@@ -19,7 +19,6 @@ protocol RouterProtocol: AnyObject {
 
 @MainActor
 final class Router: ObservableObject, RouterProtocol {
-    
     @Published var path = NavigationPath()
     
     // MARK: - Navigation

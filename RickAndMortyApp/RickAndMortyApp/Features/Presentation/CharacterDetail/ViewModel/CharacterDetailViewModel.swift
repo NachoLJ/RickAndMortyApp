@@ -10,7 +10,6 @@ import Combine
 
 @MainActor
 final class CharacterDetailViewModel: ObservableObject {
-    
     @Published private(set) var state: CharacterDetailViewState = .loading
     
     private let characterId: Int

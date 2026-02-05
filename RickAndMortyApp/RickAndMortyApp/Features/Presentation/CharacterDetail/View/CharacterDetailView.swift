@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct CharacterDetailView: View {
-    
     @StateObject private var viewModel: CharacterDetailViewModel
     @EnvironmentObject private var container: AppContainer
     

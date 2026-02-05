@@ -9,7 +9,6 @@ import Foundation
 import Combine
 
 /// Global state that defines which flow the app should show.
-
 @MainActor
 final class AppState: ObservableObject {
     enum AppFlow: Equatable {

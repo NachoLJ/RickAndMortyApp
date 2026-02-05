@@ -9,7 +9,6 @@ import SwiftUI
 
 /// View builder that maps AppRoute to actual SwiftUI views
 struct RouterView: View {
-    
     let route: AppRoute
     @EnvironmentObject private var container: AppContainer
     

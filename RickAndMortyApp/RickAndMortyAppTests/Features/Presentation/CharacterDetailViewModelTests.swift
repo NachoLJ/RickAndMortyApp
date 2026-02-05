@@ -10,7 +10,6 @@ import XCTest
 
 @MainActor
 final class CharacterDetailViewModelTests: XCTestCase {
-    
     func test_onAppear_loadsCharacterDetail_andSetsLoadedState() async {
         // Arrange
         let expectedCharacter = makeCharacterEntity(id: 1, name: "Rick Sanchez")

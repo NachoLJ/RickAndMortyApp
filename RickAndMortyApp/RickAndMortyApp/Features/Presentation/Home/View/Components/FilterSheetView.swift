@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct FilterSheetView: View {
-    
     @Environment(\.dismiss) private var dismiss
     @Binding var filters: CharactersFilters
     @State private var localFilters = CharactersFilters()

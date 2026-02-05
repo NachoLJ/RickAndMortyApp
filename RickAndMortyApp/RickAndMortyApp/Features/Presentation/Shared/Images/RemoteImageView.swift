@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct RemoteImageView: View {
-
     @StateObject private var loader: ImageLoader
     let contentMode: ContentMode
 

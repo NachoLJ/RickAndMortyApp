@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct CharacterGridCellView: View {
-
     let item: CharacterRowModel
     let imageLoader: ImageLoader
     let onTap: () -> Void

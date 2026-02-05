@@ -12,7 +12,6 @@ protocol CharactersRepositoryProtocol: Sendable {
 }
 
 final class DefaultCharactersRepository: CharactersRepositoryProtocol {
-    
     private let networkClient: NetworkClientProtocol
     
     init(networkClient: NetworkClientProtocol) {

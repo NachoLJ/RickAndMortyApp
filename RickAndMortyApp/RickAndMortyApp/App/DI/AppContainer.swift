@@ -10,7 +10,6 @@ import Combine
 
 @MainActor
 final class AppContainer: ObservableObject {
-    
     // MARK: - Core
     
     private lazy var networkClient: NetworkClientProtocol = {

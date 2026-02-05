@@ -7,7 +7,6 @@
 
 import XCTest
 @testable import RickAndMortyApp
-
 final class FetchCharactersUseCaseTests: XCTestCase {
 
     func test_execute_returnsRepositoryResult() async throws {

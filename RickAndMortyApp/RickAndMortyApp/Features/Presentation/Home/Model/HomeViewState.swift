@@ -8,7 +8,6 @@
 import Foundation
 
 struct HomeViewState: Equatable {
-    
     enum Content: Equatable {
         case loading
         case loaded([CharacterRowModel])

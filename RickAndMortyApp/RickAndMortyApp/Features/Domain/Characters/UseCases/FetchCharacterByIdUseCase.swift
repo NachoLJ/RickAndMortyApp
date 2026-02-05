@@ -12,7 +12,6 @@ protocol FetchCharacterByIdUseCaseProtocol: Sendable {
 }
 
 struct FetchCharacterByIdUseCase: FetchCharacterByIdUseCaseProtocol {
-    
     private let repository: CharacterDetailRepositoryProtocol
     
     init(repository: CharacterDetailRepositoryProtocol) {

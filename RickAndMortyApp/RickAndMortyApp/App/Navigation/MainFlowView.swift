@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct MainFlowView: View {
-    
     @EnvironmentObject private var container: AppContainer
     @StateObject private var router = Router()
     

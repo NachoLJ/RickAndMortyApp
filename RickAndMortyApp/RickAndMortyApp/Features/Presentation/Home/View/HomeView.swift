@@ -8,9 +8,7 @@
 import SwiftUI
 
 struct HomeView: View {
-    
     @EnvironmentObject private var container: AppContainer
-    
     @StateObject private var viewModel: HomeViewModel
     @State private var isFilterSheetPresented = false
     

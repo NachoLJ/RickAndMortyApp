@@ -11,7 +11,6 @@ import SwiftUI
 
 @MainActor
 final class HomeViewModel: ObservableObject {
-    
     private let fetchCharactersUseCase: FetchCharactersUseCaseProtocol
     private let router: RouterProtocol
     

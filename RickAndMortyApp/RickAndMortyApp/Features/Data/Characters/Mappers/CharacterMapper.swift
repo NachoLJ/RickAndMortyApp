@@ -8,7 +8,6 @@
 import Foundation
 
 enum CharacterMapper {
-    
     static func map(_ dto: CharacterDTO) throws -> CharacterEntity {
         guard let url = URL(string: dto.image) else {
             throw MappingError.invalidURL(dto.image)

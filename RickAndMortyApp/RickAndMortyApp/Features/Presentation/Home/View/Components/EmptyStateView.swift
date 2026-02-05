@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct EmptyStateView: View {
-    
     let onClearFilters: () -> Void
     
     var body: some View {

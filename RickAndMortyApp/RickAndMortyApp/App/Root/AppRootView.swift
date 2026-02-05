@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct AppRootView: View {
-    
     @EnvironmentObject private var appState: AppState
     
     var body: some View {

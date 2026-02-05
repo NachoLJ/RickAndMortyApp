@@ -9,7 +9,6 @@ import XCTest
 @testable import RickAndMortyApp
 
 final class FetchCharacterByIdUseCaseTests: XCTestCase {
-    
     func test_execute_returnsCharacterFromRepository() async throws {
         // Arrange
         let expectedCharacter = CharacterEntity(

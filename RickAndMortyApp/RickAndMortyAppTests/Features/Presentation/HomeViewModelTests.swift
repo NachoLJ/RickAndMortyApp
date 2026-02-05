@@ -14,7 +14,6 @@ import Combine
 final class HomeViewModelTests: XCTestCase {
     
     // MARK: - Initial Load Tests
-    
     func test_onAppear_loadsCharacters_andSetsLoadedState() async {
         // Arrange
         let mockCharacters = [
