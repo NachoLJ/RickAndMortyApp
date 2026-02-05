@@ -8,7 +8,6 @@
 import SwiftUI
 import Combine
 
-/// Protocol for navigation actions
 @MainActor
 protocol RouterProtocol: AnyObject {
     func push(_ route: AppRoute)
@@ -18,32 +17,26 @@ protocol RouterProtocol: AnyObject {
     func setRoot(_ route: AppRoute)
 }
 
-/// Centralized navigation manager using NavigationStack's path
 @MainActor
 final class Router: ObservableObject, RouterProtocol {
     
-    /// Navigation path that drives the NavigationStack
     @Published var path = NavigationPath()
     
-    // MARK: - Navigation Actions
+    // MARK: - Navigation
     
-    /// Navigate to a new route (push)
     func push(_ route: AppRoute) {
         path.append(route)
     }
     
-    /// Go back one screen (pop)
     func pop() {
         guard !path.isEmpty else { return }
         path.removeLast()
     }
     
-    /// Go back to root screen (pop to root)
     func popToRoot() {
         path.removeLast(path.count)
     }
     
-    /// Replace current screen with a new route
     func replace(with route: AppRoute) {
         if !path.isEmpty {
             path.removeLast()
@@ -51,7 +44,6 @@ final class Router: ObservableObject, RouterProtocol {
         path.append(route)
     }
     
-    /// Navigate to a specific route, removing all others
     func setRoot(_ route: AppRoute) {
         popToRoot()
         push(route)

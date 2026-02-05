@@ -69,7 +69,7 @@ final class ImageLoader: ObservableObject {
             } catch let error as NetworkError {
                 if Task.isCancelled { return }
                 
-                // Handle 429 error
+                // Handle 429 error (Too many requests)
                 if case .httpError(statusCode: 429) = error, self.retryCount < self.maxRetries {
                     await MainActor.run {
                         self.retryCount += 1

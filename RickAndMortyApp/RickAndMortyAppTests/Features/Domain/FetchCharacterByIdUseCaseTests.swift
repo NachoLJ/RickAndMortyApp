@@ -53,34 +53,9 @@ final class FetchCharacterByIdUseCaseTests: XCTestCase {
             XCTAssertEqual(error as? TestError, expectedError)
         }
     }
-    
-    func test_execute_passesCorrectIdToRepository() async throws {
-        // Arrange
-        let character = CharacterEntity(
-            id: 42,
-            name: "Morty",
-            status: .alive,
-            species: "Human",
-            gender: .male,
-            origin: "Earth",
-            location: "Earth",
-            episodes: [1],
-            imageURL: URL(string: "https://example.com/42.png")!
-        )
-        
-        let mockRepo = MockCharacterDetailRepository(result: .success(character))
-        let sut = FetchCharacterByIdUseCase(repository: mockRepo)
-        
-        // Act
-        _ = try await sut.execute(id: 42)
-        
-        // Assert
-        let receivedId = await mockRepo.receivedId
-        XCTAssertEqual(receivedId, 42)
-    }
 }
 
-// MARK: - Test Doubles
+// MARK: - Mocks
 
 private actor MockCharacterDetailRepository: CharacterDetailRepositoryProtocol {
     

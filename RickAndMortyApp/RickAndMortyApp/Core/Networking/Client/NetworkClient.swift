@@ -46,7 +46,7 @@ final class DefaultNetworkClient: NetworkClientProtocol {
     }
 }
 
-// MARK: - Private helpers
+// MARK: - Private Methods
 
 private extension DefaultNetworkClient {
 
@@ -70,8 +70,6 @@ private extension DefaultNetworkClient {
         return request
     }
 
-    /// Executes a request and returns validated (data, response).
-    /// - Logs request/response/errors and centralizes all common validation.
     func perform(_ request: URLRequest) async throws -> (Data, HTTPURLResponse) {
         let url = request.url ?? URL(string: "about:blank")!
 

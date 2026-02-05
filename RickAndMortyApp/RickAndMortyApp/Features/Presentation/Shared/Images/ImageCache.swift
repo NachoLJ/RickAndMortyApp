@@ -8,7 +8,6 @@
 import Foundation
 import UIKit
 
-// MARK: - Simple in-memory cache (presentation-level)
 final class ImageCache {
     static let shared = ImageCache()
     

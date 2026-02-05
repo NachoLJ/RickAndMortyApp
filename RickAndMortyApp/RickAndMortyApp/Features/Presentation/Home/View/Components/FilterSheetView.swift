@@ -9,17 +9,11 @@ import SwiftUI
 
 struct FilterSheetView: View {
     
-    @Binding var filters: CharactersFilters
     @Environment(\.dismiss) private var dismiss
+    @Binding var filters: CharactersFilters
+    @State private var localFilters = CharactersFilters()
+
     let onApply: () -> Void
-    
-    @State private var localFilters: CharactersFilters
-    
-    init(filters: Binding<CharactersFilters>, onApply: @escaping () -> Void) {
-        self._filters = filters
-        self.onApply = onApply
-        self._localFilters = State(initialValue: filters.wrappedValue)
-    }
     
     var body: some View {
         NavigationStack {
@@ -55,9 +49,14 @@ struct FilterSheetView: View {
                 resetButton
             }
         }
+        .onAppear {
+            localFilters = filters
+        }
         .presentationDetents([.medium])
         .presentationDragIndicator(.visible)
     }
+    
+    // MARK: - Components
     
     private var statusPicker: some View {
         Picker("Status", selection: $localFilters.status) {
@@ -98,6 +97,8 @@ struct FilterSheetView: View {
         .disabled(!localFilters.hasFilters)
     }
 }
+
+// MARK: - Preview
 
 #Preview {
     FilterSheetView(

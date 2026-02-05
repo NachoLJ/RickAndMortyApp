@@ -29,8 +29,8 @@ final class FetchCharactersUseCaseTests: XCTestCase {
             nextPage: 2
         )
 
-        let fakeRepo = FakeCharactersRepository(result: .success(expected))
-        let sut = FetchCharactersUseCase(repository: fakeRepo)
+        let mockRepo = MockCharactersRepository(result: .success(expected))
+        let sut = FetchCharactersUseCase(repository: mockRepo)
         let params = CharactersParameters(page: 1)
 
         // Act
@@ -38,14 +38,14 @@ final class FetchCharactersUseCaseTests: XCTestCase {
 
         // Assert
         XCTAssertEqual(page, expected)
-        let received = await fakeRepo.receivedParameters()
+        let received = await mockRepo.receivedParameters()
         XCTAssertEqual(received, [params])
     }
 
     func test_execute_propagatesError() async {
         // Arrange
         let fakeError = TestError.someFailure
-        let fakeRepo = FakeCharactersRepository(result: .failure(fakeError))
+        let fakeRepo = MockCharactersRepository(result: .failure(fakeError))
         let sut = FetchCharactersUseCase(repository: fakeRepo)
 
         // Act + Assert
@@ -58,9 +58,9 @@ final class FetchCharactersUseCaseTests: XCTestCase {
     }
 }
 
-// MARK: - Test Doubles
+// MARK: - Mocks
 
-private actor FakeCharactersRepository: CharactersRepositoryProtocol {
+private actor MockCharactersRepository: CharactersRepositoryProtocol {
 
     private let result: Result<CharactersPageEntity, Error>
     private var parameters: [CharactersParameters] = []

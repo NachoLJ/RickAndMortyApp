@@ -22,7 +22,6 @@ final class CharacterDetailViewModel: ObservableObject {
     }
     
     func loadCharacter() async {
-        // Skip reload if already loaded
         if case .loaded = state { return }
         
         state = .loading

@@ -20,7 +20,6 @@ final class DefaultImageRepository: ImageRepositoryProtocol {
     }
 
     func fetchImageData(from url: URL) async throws -> Data {
-        // Delegate to network client so we keep logging and shared session/cache behavior
         return try await networkClient.fetchImage(from: url)
     }
 }

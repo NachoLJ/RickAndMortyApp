@@ -57,5 +57,4 @@ enum CharacterMapper {
     enum MappingError: Error, Equatable {
         case invalidURL(String)
     }
-    
 }
