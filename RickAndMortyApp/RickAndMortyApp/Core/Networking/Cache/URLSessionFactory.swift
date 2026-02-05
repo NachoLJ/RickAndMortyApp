@@ -9,7 +9,6 @@ import Foundation
 
 enum URLSessionFactory {
     
-    // Creates a URLSession with memory and disk cache to reduce API calls
     static func makeCachedSession() -> URLSession {
         let config = URLSessionConfiguration.default
         

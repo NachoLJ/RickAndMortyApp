@@ -13,7 +13,6 @@ protocol NetworkClientProtocol: Sendable {
 }
 
 final class DefaultNetworkClient: NetworkClientProtocol {
-
     private let session: URLSession
     private let decoder: JSONDecoder
     private let logger: NetworkLoggerProtocol
@@ -49,7 +48,6 @@ final class DefaultNetworkClient: NetworkClientProtocol {
 // MARK: - Private Methods
 
 private extension DefaultNetworkClient {
-
     func makeURLRequest(from endpoint: Endpoint) throws -> URLRequest {
         guard let url = endpoint.url else {
             throw NetworkError.invalidUrl

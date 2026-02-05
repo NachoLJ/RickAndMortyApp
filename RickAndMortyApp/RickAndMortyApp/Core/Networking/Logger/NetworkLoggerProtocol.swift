@@ -15,7 +15,6 @@ protocol NetworkLoggerProtocol: Sendable {
 }
 
 struct NetworkLogger: NetworkLoggerProtocol {
-
     private let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "RickAndMortyApp",
                                 category: "Network")
 
