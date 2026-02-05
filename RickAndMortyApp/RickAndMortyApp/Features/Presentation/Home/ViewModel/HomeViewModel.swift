@@ -137,7 +137,7 @@ final class HomeViewModel: ObservableObject {
             if append, case .loaded(let current) = state.content {
                 state.content = .loaded(current + newRows)
             } else {
-                // No results + filters = empty state, not error.
+                // Empty results with active filters = empty state
                 if newRows.isEmpty && filters.isActive {
                     state.content = .empty
                 } else {
@@ -145,7 +145,7 @@ final class HomeViewModel: ObservableObject {
                 }
             }
         } catch {
-            // 404 with filters = no results (not an error)
+            // API returns 404 when filters match nothing = empty state, not error
             if let networkError = error as? NetworkError,
                case .httpError(statusCode: 404) = networkError,
                filters.isActive {

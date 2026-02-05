@@ -44,6 +44,7 @@ enum CharacterMapper {
         }
     }
     
+    // Extracts episode numbers from episode URLs (e.g., ".../episode/1" -> 1)
     private static func parseEpisodeNumbers(_ urls: [String]) -> [Int] {
         urls.compactMap { url in
             guard let lastComponent = url.split(separator: "/").last,

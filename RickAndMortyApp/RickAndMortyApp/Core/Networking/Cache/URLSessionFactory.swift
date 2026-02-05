@@ -9,6 +9,7 @@ import Foundation
 
 enum URLSessionFactory {
     
+    // Creates a URLSession with memory and disk cache to reduce API calls
     static func makeCachedSession() -> URLSession {
         let config = URLSessionConfiguration.default
         
@@ -22,11 +23,9 @@ enum URLSessionFactory {
             diskPath: "rickandmorty-url-cache"
         )
         
-        // Prefer cached data when available, otherwise load.
-        // This helps reduce requests and avoid rate limiting
+        // Cached data when available, otherwise load.
         config.requestCachePolicy = .returnCacheDataElseLoad
         
-        // Optional but helpful: timeouts
         config.timeoutIntervalForRequest = 30
         config.timeoutIntervalForResource = 60
         
