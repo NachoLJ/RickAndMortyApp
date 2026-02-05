@@ -26,7 +26,7 @@ Built with **Clean Architecture** and **MVVM** for maintainability and testabili
 - Character grid layout
 - Search by name
 - Filter by status (Alive, Dead, Unknown) and gender
-- Character detail page with episodes
+- Character detail page
 - Image caching for better performance
 - Automatic retry when API rate limit is reached
 - Error and empty state handling
